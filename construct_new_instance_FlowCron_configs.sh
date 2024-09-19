@@ -6,6 +6,8 @@ SOURCE_ENDPOINT_UUID=""
 FLOWCRON_BASE_PATH=""
 TIME_OPTS=("1" "2" "5" "10" "15" "30")
 
+
+echo -e "Constructing Globus Flow definition and schema from templates.\nPlease have either ran the HPC side code first, so you know the path, or have a clear idea of the full path before you run this script.\n"
 #Get the name of the HPC
 while true ; do
   read -p "What is the name of this particular FlowCron instance (This is to generate the updated json files as 'FlowCron-<instance_name>_definition.json' and 'FlowCron-<instance_name>_input_schema.json'? " FLOWCRON_INSTANCE_NAME
@@ -18,7 +20,7 @@ done
 
 #Get the name of the HPC
 while true ; do
-  read -p "What is the name of the HPC? " HPC_NAME
+  read -p "Please provide a human-readable name for the HPC system? " HPC_NAME
   if [ ! -z $HPC_NAME ]; then
 	  break
   else
