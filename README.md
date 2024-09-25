@@ -207,7 +207,7 @@ Finally, after the `NO EDIT ZONE` all job commands can be added. (`List of comma
 **Do not use any `$HOME` and/or `$USER` variables.** \
 This is because the script will be submitted using the account of the person that has setup FlowCron (typically the project PI and/or a project manager)
 
-The slurm script is being submitted with a `sbatch` command and with the present working directory being the `Job_Dir` (aka `sbatch scripts/submission_script`). \
+The slurm script is being submitted with a `sbatch` command and with the present working directory being the `Job_Dir` (aka the `sbatch` command looks like this `sbatch scripts/submission_script.sh`). \
 Since the present working directory is the `Job_Dir` directory if you want for instance to point to a file e.g. `test.txt` in a directory named `test` which is the `data` directory, point to using the path relative path `data/test/test.txt`
 
 The general rule about path is that:
