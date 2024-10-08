@@ -2,27 +2,28 @@
 
 ## Before you start installing the Globus Flow side of FlowCron
 
-Please install FlowCron on a HPC first. To install FlowCron on an HPC, it is strongly advised that you are the PI or a manager of a project on the HPC you want to install FlowCron. If you need to remind yourself of the settings for a previously installed FlowCron, see your ${HOME}/.config/flowcron directory on HPC.
+Please install FlowCron on a HPC first. To install FlowCron on an HPC, it is **strongly advised that you are the PI or a manager of a project on the HPC** you want to install FlowCron. If you need to remind yourself of the settings for a previously installed FlowCron, see your ${HOME}/.config/flowcron directory on HPC.
 
 There are two prerequisites for installing FlowCron:
 1. The HPC allows the use of `cron` to the PIs and/or managers of projects on the HPC.
 2. The HPC has a Globus collection allowing data to be transferred in and out to the project's designated directory location on the HPC.
 
-To install the cron service portion of FlowCron in the HPC, clone this repository (https://github.com/baskerville-hpc/FlowCron-HPC-side) into a project directory on the HPC.
+To install the cron service portion of FlowCron in the HPC, clone this repository (https://github.com/baskerville-hpc/FlowCron-HPC-side) into a project directory on the HPC, and follow the instructions this repository's README.md file.
 
 After you’ve performed that step you can return here to install the Globus Flow that will communicate with the cron service. This completes the FlowCron installation.
 
-## Installation of the Globus Flow of FlowCron
+## Installation of the Globus Flow of FlowCron, primarily meant for HPC project PI/managers
 
 ### Running the bash script
 
 To install the Globus Flow of FlowCron you need access to terminal with `bash` .
 
-`Bash` is available from a terminal on either a Linux or macOS machine or by using [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install) terminal on a Windows PC/workstation.
+`bash` is available from a terminal on either a Linux or macOS machine or by using [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install) terminal on a Windows PC/workstation.
 
 First clone this repository and navigate inside it:
 
-```git clone https://github.com/rosalindfranklininstitute/FlowCron-Globus_Flow-side.git
+```
+git clone https://github.com/rosalindfranklininstitute/FlowCron-Globus_Flow-side.git
 cd FlowCron-Globus_Flow-side
 ```
 
@@ -48,7 +49,7 @@ Then the terminal will prompt you to enter some details (read the instructions a
    To have this path printed, after you `ssh` to the HPC, navigate to this directory and use the case-sensitive `pwd -P` command. This command will give you the answer free from any symbolic links.
 5. Lastly, set the interval of the time to check the job's status (Question 5). This value should be chosen considering the range of running times typical jobs submitted to FlowCron will take. If short jobs are typically submitted, then a short interval can help reduce the time taken in the case where the job has finished, but the Flow has yet to recognise this. If longer jobs are typically submitted, then a longer interval can help to keep the size of the Globus Flow logs to a minimum. This is due to the Flow checking the job’s status frequently before it’s completion, leading to the Flow logs containing numerous check status statements.
 
-After answering  all `bash` script questions, a new directory will be created locally with the name given to this instance of FlowCron, which was specified in Question 1.
+After answering all `bash` script questions, a new directory will be created locally with the name given to this instance of FlowCron, which was specified in Question 1.
 
 In it there will be two new `.json` files. One with the `_definition.json` postfix and one with the `_input_schema.json` postfix.
 
@@ -56,13 +57,13 @@ In it there will be two new `.json` files. One with the `_definition.json` postf
 
 Before you publish the FlowCron Globus Flow (aka make it available in the https://app.globus.org), first create a group to organise users who need to use this flow.
 
-As the project PI and/or manager you should create a Globus group containing as 'Members' all the project members you would to use FlowCron to automatically submit jobs/units of work.
+As the project PI and/or manager you should create a Globus group containing as 'Members' all the project members you would like to use FlowCron to automatically submit jobs/units of work.
 
 To do this follow the guide mentioned [here](https://docs.globus.org/guides/tutorials/manage-identities/manage-groups/) 
 
 In the rest of this document, we will refer to this group with the name `FlowCron_Globus_group`, but you can name it anything you like. 
 As shown in the Overview tab of the group (last figure of the [guide](https://docs.globus.org/guides/tutorials/manage-identities/manage-groups/)), the **Group UUID** is being displayed. 
-Please note the **Group UUID** if you are planning to publish the Globus Flow using the Globus CLI, more about this below.
+Please note down the **Group UUID** if you are planning to publish the Globus Flow using the Globus CLI, more about this below.
 
 ### Deploy FlowCron's Globus Flow using Globus UI
 
@@ -80,10 +81,10 @@ In the new window (see image below), input the Flow Name.
 
 The name should make it clear to which HPC and project the submitted jobs/units of work will be sent. 
 
-Upload the two `.json` files appropriately. \
+Upload the two `.json` files appropriately.
 
 You should upload the `FlowCron-<FLOWCRON_INSTANCE_NAME>_definition.json` in the Flow Defination field. \
-And the `FlowCron-<FLOWCRON_INSTANCE_NAME>_input_schema.json` in the Input Schema field. \
+And the `FlowCron-<FLOWCRON_INSTANCE_NAME>_input_schema.json` in the Input Schema field.
 
 Fill in the other text fields if you require them.
 
@@ -102,7 +103,7 @@ This will open a new window as shown in the image below.
 
 In this new window, select the **Group** option in the **Assign To** field. 
 
-Then press the **Select a Group** button, and find and select the `FlowCron_Globus_group` group (or the name you gave your group in the [previous step](#create-a-globus-group-to-add-the-users-to-whom-you-will-share-flowcrons-globus-flow).
+Then press the **Select a Group** button, and find and select the `FlowCron_Globus_group` group (or the name you gave your group in the [previous step](#create-a-globus-group-to-add-the-users-to-whom-you-will-share-flowcrons-globus-flow)).
 
 Finally, select the **Runnable By** option in the **Role** field, so that all members of the group can run your Flow. 
 
@@ -110,11 +111,13 @@ Click the **Add Role** button to add the group with this role.
 
 ![image](images/GlobusFlow-AssignNewRole.png)
 
-You may repeat the **Assign New Role** process mentioned above if you want to allow to multiple groups run the flow, or if you want to add specific users/groups as administrators of the flow.
+You may repeat the **Assign New Role** process mentioned above, if you want to allow to multiple groups or specific users to run the flow.
+
+If you want you can repeat the process to add specific users/groups as administrators of the flow (i.e. The project PI if you are a manager of the project and/or other project managers.)
 
 ### Deploy FlowCron's Globus Flow using Globus CLI
 
-An alternative way to deploy FlowCron's Globus Flow is via Globus CLI.
+An alternative way to deploy FlowCron's Globus Flow is via the Globus CLI.
 
 The advantage of using Globus CLI is that you can deploy the flow and add roles in one step. The disadvantage is that you need to be more familiar with Python, and package managers like pip and conda, in addition to the Linux/macOS terminal.
 
@@ -130,15 +133,15 @@ After you’ve finished installing the Globus CLI, run the [`globus login` comma
 
 After you successfully login, you can deploy FlowCron's Globus Flow, with the `globus flow create` command (read more [here](https://docs.globus.org/cli/reference/flows_create/)).
 
-Below is an example command showing how to deploy FlowCron's Globus Flow and add the `FlowCron_Globus_group` group as a group that can run the flow in command. Replace <> with the appropriate values.
+Below is an example command showing how to deploy FlowCron's Globus Flow and add the `FlowCron_Globus_group` group as a group that can run the flow in command. Replace the `<>` placeholder with the appropriate values.
 
 ```
 globus flows create --input-schema FlowCron-<FLOWCRON_INSTANCE_NAME>_input_schema.json --starter urn:globus:groups:id:<FlowCron_Globus_group_UUID> '<FLOWCRON_INSTANCE_NAME>' FlowCron-<FLOWCRON_INSTANCE_NAME>_definition.json 
 ```
 
-### How to use the Flow as a user
+## How to use the FlowCron Globus Flow as a user
 
-#### Prepare a Job / Unit of Work
+### Prepare your Job / Unit of Work
 
 In FlowCron, you need to select a whole directory (called Unit of Work).
 
@@ -160,7 +163,7 @@ Job_Dir
 The idea behind FlowCron is that there is one FlowCron per project on a HPC system. 
 Therefore, the  slurm script, should be written similar to how the project slurm scripts are written for that HPC. So slurm arguments like `--qos`, `--account` or `--partition` will need the appropriate values for that project.  
 
-Other slurm arguments should be filled in depending on project and/or the job to be computed. 
+Other slurm arguments should be filled in depending on the project and/or the job to be computed. 
 
 Below is a template `submission_script.sh` that should be used:
 
@@ -192,43 +195,57 @@ fi
 set -e
 
 cd "${working_directory}"
-
 # NO EDIT ZONE: END
-# List of commands for the job
 
+# List of commands for the job
 ```
 In the beginning of the `submission_script.sh` slurm script, sbatch options are being added (e.g. `--qos`, `--time`, etc.) , please fill them appropriately.
 
-Please avoid using the `--output` or `-o` and the `--error` or `-e` options because these will be used by FlowCron and overwritten. Add here any `module` commands to the `Module load section` so all the necessary dependencies for the job are loaded.
+Please avoid using the `--output` or `-o` and the `--error` or `-e` options because these will be used by FlowCron and overwritten.
+
+Add here any `module` commands to the `Module load section` so all the necessary dependencies for the job are loaded.
 
 Between the `# NO EDIT ZONE: START` and `# NO EDIT ZONE: END` comments, there is a section with commands you should **NOT** alter. These commands help with logging details in the slurm `.out` file in case there are issues with the job which need to be debugged.
 
-Finally, after the `NO EDIT ZONE` all of your job commands can be added, see the `List of commands for the job` section. Also, do not use any **`$HOME` and/or `$USER` variables.**, as the script will be submitted using the account of the person that installed FlowCron, which will typically the project PI or  project manager.
+Finally, after the `NO EDIT ZONE` all of your job commands can be added, see the `List of commands for the job` section.
 
-The slurm script will be submitted with a `sbatch` command and with the present working directory being the `Job_Dir`. For instance, the `sbatch` command looks like this `sbatch scripts/submission_script.sh`.
+Also, **do not use any `$HOME` and/or `$USER` variables**, as the script will be submitted using the account of the person that installed FlowCron, which will typically be either the HPC project PI or a HPC project manager.
 
-Since the present working directory is the `Job_Dir` directory, if you want for instance to point to a file e.g. `test.txt` in a directory named `test` which is the `data` directory, point to using the path relative path `data/test/test.txt` in the script.
+The slurm script will be submitted with a `sbatch` command and with the present working directory being the `Job_Dir`. \
+For instance, the `sbatch` command looks like this `sbatch scripts/submission_script.sh`.
 
-The general rule about path is that:
+Since the present working directory is the `Job_Dir` directory, if you want for instance to point to a file e.g. `test.txt` in a directory named `test` which is the `data` directory, point to using the relative path `data/test/test.txt` in the script.
 
-* If the files/folders (data, models, etc) are packaged with the job directory (e.g. within the `data` directory) refer to them using relative paths.
-* If the inputs (data, models, etc) are already somewhere in the HPC (e.g. in your personal directory) use an absolute path.
-* Use relative paths for the resulting output files/folders.
+The general rule about file/folder paths used in the slurm script is that:
+* For files/folders (data, models, etc), that are to be used as **input** to the script commands:
+  * If they are **packaged with the job directory** (e.g. within the `data` directory) refer to them using **relative paths**.
+  * If they are **stored already somewhere in the HPC** (e.g. in your personal directory) use **absolute paths**.
+* For files/folders (data, models, etc), that are to be used as **output** to the script commands use **relative paths**.
 
-#### Submit a Job / Unit of Work to FlowCron's Globus Flow
+### Submit a Job / Unit of Work to FlowCron's Globus Flow
 
-**Important: If you haven't submitted via FlowCron for some time, or if it is your first time, please do the following:** 
+**Important: If you haven't submitted via FlowCron for some time, or if it is your first time, please do the following:** \
 Login to Globus (https://app.globus.org) and in the left-hand menu bar, then select **File Manager**, and then access the HPC's Globus collection. This may ask you to log in again. 
 Some HPCs use OIDC Globus Collections that require re-authentication every X number of days. By pre-emptively accessing the HPC's Globus collection, it allows FlowCron's Globus Flow to also access it without the need to authenticate. 
 
-After you create a job directory, to submit it, login to [Globus] (https://app.globus.org),  and in the left-hand menu bar,  select **Flows**, and then go to the **Library** tab. To find the Globus Flow you just created more easily,  you can select the **Administered by me** checkbox to reduce the number of displayed flows. 
-Select the appropriate FlowCron flow, the image below shows one named `FlowCron`.
+After you create a job directory, to submit it, login to [Globus](https://app.globus.org), and in the left-hand menu bar, select **Flows**, and then go to the **Library** tab. \
+To filter out most of Globus Flows in order to find FlowCron's Globus Flow more easily, you can select the:
+
+* **Administered by me** checkbox if you are one of **flow's administrators**.
+* **Runnable by me** checkbox if you are a **simple user**.
+
+Type the specific name of flow if there are still many flows displayed. \
+As mentioned, the name of the flow (chosen by the flow administrator that created the flow) should be clear. \
+Meaning that it is clear to which HPC and project the submitted jobs/units of work will be sent.
+
+Select the appropriate FlowCron Globus Flow, (in the image below shows one named `FirstSteps`).
 
 Click **Start**.
 
 ![image](images/StartingFlow.png)
 
-**Important:** When you FlowCron's Globus Flow for the first time you have to tick **Allow** in the Globus prompt to start using it (see image below).
+**Important:** When you use FlowCron's Globus Flow for the first time you have to tick **Allow** in the Globus prompt to start using it (see image below).
+
 ![image](images/GlobusAuthorise.png)
 
 The first thing displayed is the **Guided** tab (see image below). 
@@ -245,11 +262,11 @@ Label this run of the flow and click **Start run**.
 
 ![image](images/GlobusFlow-FilledIn.png)
 
-**Important:** If you have not used FlowCron's Globus Flow for some time or if it is your first time, please do the following after you click **Start run**. Click the **Flows** option in the left-hand menu bar, then the **Runs** tab, and open the flow run you just submitted. Wait a bit to provide additional authorization or consents in case they are requested. 
+**Important:** If you have not used FlowCron's Globus Flow for some time or if it is your first time, please do the following after you click **Start run**. Click the **Flows** option in the left-hand menu bar, then the **Runs** tab, and open the flow run you just submitted. Wait a bit to ensure that the flow is not halted because it requires additional authorization or consents. It it does there will be a prompt you can select in order to provide them. 
 
 Typically, when FlowCron's Globus Flow is used for the first time it requires multiple authorizations or consents in order to be allowed to access both your source Globus collection and the HPC's Globus collection. Without these, it will fail. 
 
-In case additional authorization or consents are needed (see image below), an email will be sent to the email address associated with your Globus account containing a link. Clicking on this link will allow you to supply the appropriate consents.
+In case additional authorization or consents are needed (see image below), an email will also be sent to the email address associated with your Globus account containing a link. You can click on this link in order to supply the appropriate consents.
 
 ![image](images/GlobusReview-Consents.png)
 
@@ -263,13 +280,13 @@ If you click on it and go to the **Event Log** tab, you can see which state the 
 
 **Do not assign a role to anyone else nor attempt to assign any role if you are not experienced with using the Globus UI.**
 
-We have already communicated with the Globus support team for a future feature to be added. This feature will allow Flow administrators to set to be the only Manager in all of the runs of their Flow, and to be able to disable the ability of people who can run their Flows from being capable of assigning or changing roles on Flows runs.
+We have already communicated with the Globus support team for a future feature to be added. This feature will allow a Flow administrator to be set as the only Manager in all of the runs of their Flow, and to be able to disable the ability of people who can run their Flow from being capable of assigning or changing roles on Flow's runs.
 
-After the Unit of Work finishes being computed on the HPC (either successfully or unsuccessfully), any files and folders generated within the Unit of Work directory (in our example the `Job_Dir`) will be transferred back (transfer with sync to not waste time re-transferring the original files back) to the same location (Globus collection/path) where you uploaded the Unit of Work from.
+After the Unit of Work finishes being computed on the HPC (either successfully or unsuccessfully), any files and folders generated within the Unit of Work directory (in our example the `Job_Dir`) will be transferred back (transfer with sync to not waste time re-transferring the original files back) to the same location (Globus collection/path) where the Unit of Work was uploaded from.
 
-If the `Delete job directory in <HPC-name> after transferring the results back?` was set to `false`, then the Unit of Work on the HPC will be deleted.
+If the `Delete job directory in <HPC-name> after transferring the results back?` was set to `true`, then the Unit of Work on the HPC will be deleted.
 
-If the Unit of Work finished successfully, and `Delete job directory` set to false, then the Unit of Work directory structure will continue being stored in the cron service directory location (the path provided in Question 4 in [here](#running-the-bash-script)), under the `AnalysedFiles` directory, under the name `<Unit_of_Work_directory_name>_<flow_run_UUID>`.
+If the Unit of Work finished successfully, and `Delete job directory` set to `false`, then the Unit of Work directory structure will continue being stored in the cron service directory location (the path provided in Question 4 in [here](#running-the-bash-script)), under the `AnalysedFiles` directory, under the name `<Unit_of_Work_directory_name>_<flow_run_UUID>`.
 
 If the Unit of Work finished unsuccessfully, then its directory will continue being stored in the cron service directory location (the path provided in Question 4 in [here](#running-the-bash-script)), under the `FailedJobs` directory, and the Unit of Work directory will be named `<Unit_of_Work_directory_name>_<flow_run_UUID>`
 
