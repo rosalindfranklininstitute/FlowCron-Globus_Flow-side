@@ -2,15 +2,15 @@
 
 ## Before you start installing the Globus Flow side of FlowCron
 
-Please install FlowCron on a HPC first. To install FlowCron on an HPC, it is strongly advised that you are the PI or a manager of a project on the HPC you want to install FlowCron. If you need to remind yourself of the settings, see your ${HOME}/.config/flowcron directory.
+Please install FlowCron on a HPC first. To install FlowCron on an HPC, it is strongly advised that you are the PI or a manager of a project on the HPC you want to install FlowCron. If you need to remind yourself of the settings for a previously installed FlowCron, see your ${HOME}/.config/flowcron directory on HPC.
 
 There are two prerequisites for installing FlowCron:
 1. The HPC allows the use of `cron` to the PIs and/or managers of projects on the HPC.
 2. The HPC has a Globus collection allowing data to be transferred in and out to the project's designated directory location on the HPC.
 
-To install the cron service portion of FlowCron in the HPC, clone this repository (https://github.com/baskerville-hpc/FlowCron-HPC-side) into a project directory.
+To install the cron service portion of FlowCron in the HPC, clone this repository (https://github.com/baskerville-hpc/FlowCron-HPC-side) into a project directory on the HPC.
 
-After you’ve performed that step you can return here, to install the Globus Flow that will communicate with the cron service. This completes the FlowCron installation.
+After you’ve performed that step you can return here to install the Globus Flow that will communicate with the cron service. This completes the FlowCron installation.
 
 ## Installation of the Globus Flow of FlowCron
 
