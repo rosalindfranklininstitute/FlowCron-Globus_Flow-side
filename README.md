@@ -1,6 +1,6 @@
 # FlowCron-Globus_Flow-side
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13960645.svg)](https://doi.org/10.5281/zenodo.13960645)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14002210.svg)](https://doi.org/10.5281/zenodo.14002210)
 
 ## Before you start installing the Globus Flow side of FlowCron
 
