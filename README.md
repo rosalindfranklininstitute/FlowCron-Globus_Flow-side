@@ -1,5 +1,7 @@
 # FlowCron-Globus_Flow-side
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13960645.svg)](https://doi.org/10.5281/zenodo.13960645)
+
 ## Before you start installing the Globus Flow side of FlowCron
 
 Please install FlowCron on a HPC first. To install FlowCron on an HPC, it is **strongly advised that you are the PI or a manager of a project on the HPC** you want to install FlowCron. If you need to remind yourself of the settings for a previously installed FlowCron, see your ${HOME}/.config/flowcron directory on HPC.
