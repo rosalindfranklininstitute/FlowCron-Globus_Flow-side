@@ -65,7 +65,7 @@
           ],
           "Comment": "Lookup the source path to determine it is a folder",
           "WaitTime": 172800,
-          "ActionUrl": "https://transfer.actions.globus.org/ls",
+          "ActionUrl": "https://transfer.actions.globus.org/stat",
           "Parameters": {
             "path.$": "$.input.source.path",
             "endpoint_id.$": "$.input.source.id"
@@ -76,7 +76,7 @@
           "Next": "SourcePathMissingFail",
           "Type": "ExpressionEval",
           "Parameters": {
-            "error.=": "'Missing source path ' + input.source.path + ' on collection ' + input.source.id"
+            "error.=": "'Unable to access path ' + input.source.path + ' in collection ' + input.source.id"
           },
           "ResultPath": "$.FlowResult"
         },
@@ -90,25 +90,25 @@
           "Type": "Choice",
           "Choices": [
             {
-              "Next": "SourcePathMissing",
-              "Variable": "$.SourcePathInfo.details.DATA[0]",
-              "IsPresent": false
+              "Next": "CheckIfInputPathIsFolder",
+              "Variable": "$.SourcePathInfo.status",
+              "StringEquals": "SUCCEEDED"
             }
           ],
           "Comment": "Determine the type of the source path",
-          "Default": "CheckIfInputPathIsFolder"
+          "Default": "SourcePathMissing"
         },
         "CheckIfInputPathIsFolder": {
           "Type": "Choice",
           "Choices": [
             {
-              "Next": "SourcePathNotAFolder",
-              "Variable": "$.SourcePathInfo.details.DATA[0].is_folder",
-              "BooleanEquals": false
+              "Next": "JobDirNameLength",
+              "Variable": "$.SourcePathInfo.details.type",
+              "StringEquals": "dir"
             }
           ],
           "Comment": "Determine if the source path is a folder",
-          "Default": "JobDirNameLength"
+          "Default": "SourcePathNotAFolder"
         },
         "SourcePathNotAFolder": {
           "Next": "SourcePathNotAFolderFail",
