@@ -90,13 +90,21 @@
           "Type": "Choice",
           "Choices": [
             {
-              "Next": "CheckIfInputPathIsFolder",
-              "Variable": "$.SourcePathInfo.status",
-              "StringEquals": "SUCCEEDED"
+              "And": [
+                      {
+                        "Variable": "$.SourcePathInfo.details.code",
+                        "IsPresent": true
+                      },
+                      {
+                        "Variable": "$.SourcePathInfo.details.code",
+                        "StringEquals": "NotFound"
+                      }
+                    ],
+                    "Next": "SourcePathMissing"
             }
           ],
           "Comment": "Determine the type of the source path",
-          "Default": "SourcePathMissing"
+          "Default": "CheckIfInputPathIsFolder"
         },
         "CheckIfInputPathIsFolder": {
           "Type": "Choice",
