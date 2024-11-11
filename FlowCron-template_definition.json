@@ -7,7 +7,7 @@
           "Type": "Action",
           "Comment": "Get information about the source Collection",
           "WaitTime": 172800,
-          "ActionUrl": "https://actions.globus.org/transfer/collection_info",
+          "ActionUrl": "https://transfer.actions.globus.org/collection_info",
           "Parameters": {
             "endpoint_id.$": "$.input.source.id"
           },
@@ -65,10 +65,9 @@
           ],
           "Comment": "Lookup the source path to determine it is a folder",
           "WaitTime": 172800,
-          "ActionUrl": "https://actions.globus.org/transfer/ls",
+          "ActionUrl": "https://transfer.actions.globus.org/stat",
           "Parameters": {
             "path.$": "$.input.source.path",
-            "path_only": true,
             "endpoint_id.$": "$.input.source.id"
           },
           "ResultPath": "$.SourcePathInfo"
@@ -77,7 +76,7 @@
           "Next": "SourcePathMissingFail",
           "Type": "ExpressionEval",
           "Parameters": {
-            "error.=": "'Missing source path ' + input.source.path + ' on collection ' + input.source.id"
+            "error.=": "'Unable to access path ' + input.source.path + ' in collection ' + input.source.id"
           },
           "ResultPath": "$.FlowResult"
         },
@@ -91,9 +90,17 @@
           "Type": "Choice",
           "Choices": [
             {
-              "Next": "SourcePathMissing",
-              "Variable": "$.SourcePathInfo.details.DATA[0]",
-              "IsPresent": false
+              "And": [
+                      {
+                        "Variable": "$.SourcePathInfo.details.code",
+                        "IsPresent": true
+                      },
+                      {
+                        "Variable": "$.SourcePathInfo.details.code",
+                        "StringEquals": "NotFound"
+                      }
+                    ],
+                    "Next": "SourcePathMissing"
             }
           ],
           "Comment": "Determine the type of the source path",
@@ -103,13 +110,13 @@
           "Type": "Choice",
           "Choices": [
             {
-              "Next": "SourcePathNotAFolder",
-              "Variable": "$.SourcePathInfo.details.DATA[0].is_folder",
-              "BooleanEquals": false
+              "Next": "JobDirNameLength",
+              "Variable": "$.SourcePathInfo.details.type",
+              "StringEquals": "dir"
             }
           ],
           "Comment": "Determine if the source path is a folder",
-          "Default": "JobDirNameLength"
+          "Default": "SourcePathNotAFolder"
         },
         "SourcePathNotAFolder": {
           "Next": "SourcePathNotAFolderFail",
@@ -188,14 +195,14 @@
                 ]
               }
             ],
-            "ActionUrl": "https://actions.automate.globus.org/transfer/transfer",
+            "ActionUrl": "https://transfer.actions.globus.org/transfer",
             "Parameters": {
-                "source_endpoint_id.$": "$.input.source.id",
-                "destination_endpoint_id": "SOURCE_ENDPOINT_UUID",
+                "source_endpoint.$": "$.input.source.id",
+                "destination_endpoint": "SOURCE_ENDPOINT_UUID",
                 "preserve_timestamp": true,
                 "verify_checksum": true,
                 "label.$": "$.path_strings.TransferToHPCNAMELabel",
-                "transfer_items": [
+                "DATA": [
                     {
                         "source_path.$": "$.input.source.path",
                         "destination_path.$": "$.path_strings.UploadedFilesLocation",
@@ -453,15 +460,15 @@
                 ]
               }
             ],
-            "ActionUrl": "https://actions.automate.globus.org/transfer/transfer",
+            "ActionUrl": "https://transfer.actions.globus.org/transfer",
             "Parameters": {
-                "source_endpoint_id": "SOURCE_ENDPOINT_UUID",
-                "destination_endpoint_id.$": "$.input.source.id",
+                "source_endpoint": "SOURCE_ENDPOINT_UUID",
+                "destination_endpoint.$": "$.input.source.id",
                 "preserve_timestamp": true,
                 "sync_level": 2,
                 "verify_checksum": true,
                 "label.$": "$.path_strings.AnalysedFilesTransferFromHPCNAMELabel",
-                "transfer_items": [
+                "DATA": [
                     {
                         "source_path.$": "$.path_strings.AnalysedFilesLocation",
                         "destination_path.$": "$.input.source.path",
@@ -641,15 +648,15 @@
                 ]
               }
             ],
-            "ActionUrl": "https://actions.automate.globus.org/transfer/transfer",
+            "ActionUrl": "https://transfer.actions.globus.org/transfer",
             "Parameters": {
-                "source_endpoint_id": "SOURCE_ENDPOINT_UUID",
-                "destination_endpoint_id.$": "$.input.source.id",
+                "source_endpoint": "SOURCE_ENDPOINT_UUID",
+                "destination_endpoint.$": "$.input.source.id",
                 "preserve_timestamp": true,
                 "sync_level": 2,
                 "verify_checksum": true,
                 "label.$": "$.path_strings.FailedJobsTransferFromHPCNAMELabel",
-                "transfer_items": [
+                "DATA": [
                     {
                         "source_path.$": "$.path_strings.FailedJobsLocation",
                         "destination_path.$": "$.input.source.path",
