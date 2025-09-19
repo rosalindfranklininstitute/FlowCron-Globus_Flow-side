@@ -39,7 +39,7 @@ Then the terminal will prompt you to enter some details (read the instructions a
 ![image](images/Globus-Flow-Side.png)
 
 1. You'll get asked for a name for this instance of FlowCron, use the same name as you gave to the HPC side. This is not mandatory but helps tie things together (Question 1).
-2. Then, enter the name of the HPC so all Globus Flow messages print it corrently (Question 2).
+2. Then, enter the name of the HPC so all Globus Flow messages print it correctly (Question 2).
 3. Then, enter the UUID of the HPC's Globus collection (aka the Globus collection used to transfer data in and out to the project's designated directory location on the HPC) (Question 3). 
    To find the UUID of the HPC's Globus collection:
    1. Click the Collections option in the left-hand menu bar.
@@ -107,7 +107,7 @@ In this new window, select the **Group** option in the **Assign To** field.
 
 Then press the **Select a Group** button, and find and select the `FlowCron_Globus_group` group (or the name you gave your group in the [previous step](#create-a-globus-group-to-add-the-users-to-whom-you-will-share-flowcrons-globus-flow)).
 
-Finally, select the **Runnable By** option in the **Role** field, so that all members of the group can run your Flow. 
+Finally, select **Stater** in the **Role** field, so that all members of the group can run your Flow. 
 
 Click the **Add Role** button to add the group with this role.
 
