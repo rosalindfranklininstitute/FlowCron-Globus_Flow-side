@@ -7,13 +7,14 @@
             "type": "object",
             "required": [
                 "source",
-                "delete"
+                "dest",
+				"script"
             ],
             "properties": {
                 "source": {
                     "type": "object",
-                    "title": "Select source collection and path",
-                    "description": "The source collection and path (path MUST end with a slash)",
+                    "title": "Data collection and path",
+                    "description": "Select collection and path to directory containing .eer and .mdoc data files together with a .gain file.",
                     "format": "globus-collection",
                     "required": [
                         "id",
@@ -22,19 +23,87 @@
                     "properties": {
                         "id": {
                             "type": "string",
-                            "format": "uuid"
+                            "format": "uuid",
+							"default": "1796e092-4888-4061-8edd-f8f682388808"
                         },
                         "path": {
-                            "type": "string"
+                            "type": "string",
+							"default": "/groups/structbio/Damage-SXT/"
                         }
                     },
                     "additionalProperties": false
                 },
+				"dest": {
+                    "type": "object",
+                    "title": "HPC collection and Flowcron path",
+                    "description": "Select collection and path to Flowcron directory containing the UploadedFiles subdirectory. A unit of work will be created inside UploadedFiles for the STA pipeline job.",
+                    "format": "globus-collection",
+                    "required": [
+                        "id",
+                        "path"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "format": "uuid",
+							"default": "a95af0f3-a49d-407f-aee8-d4b32bab380a"
+                        },
+                        "path": {
+                            "type": "string",
+							"default": "/bask/projects/h/hjcl4613-rfi-corrimg/piper/sta/flowcron/"
+                        }
+                    },
+                    "additionalProperties": false
+				},
+				"script": {
+                    "type": "object",
+                    "title": "Submission script collection and path",
+                    "description": "Select collection and path to SLURM submission script for the pipeline. This will be copied to the unit of work's scripts subdirectory.",
+                    "format": "globus-collection",
+                    "required": [
+                        "id",
+                        "path"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "format": "uuid",
+							"default": "a95af0f3-a49d-407f-aee8-d4b32bab380a"
+                        },
+                        "path": {
+                            "type": "string",
+							"default": "/bask/projects/h/hjcl4613-rfi-corrimg/piper/sta/pipeline.slurm"
+                        }
+                    },
+                    "additionalProperties": false
+				},
+				"echo": {
+                    "type": "object",
+                    "title": "Echo collection and path for analysed data",
+                    "description": "Select collection and path the unit of work should be transferred to after the analysis has completed. Note directories called 'data' or 'frames' will be excluded from the transfer.",
+                    "format": "globus-collection",
+                    "required": [
+                        "id",
+                        "path"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "format": "uuid",
+							"default": "b85f707d-83f0-4251-b11b-9c7f6045b933"
+                        },
+                        "path": {
+                            "type": "string",
+							"default": "/"
+                        }
+                    },
+                    "additionalProperties": false
+				},
                 "delete": {
                     "type": "boolean",
-                    "title": "Delete job directory in HPCNAME after transferring the results back?",
-                    "description": "Whether or not to delete the job directory and all its files in HPCNAME, once the job processing is completed.",
-                    "default": false
+                    "title": "Delete job directory after transferring the results?",
+                    "description": "Whether or not to delete the unit of work on the HPC collection once the job processing is completed.",
+                    "default": true
                 }
             },
             "additionalProperties": false
