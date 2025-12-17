@@ -8,7 +8,8 @@
             "required": [
                 "source",
                 "dest",
-				"script"
+				"script",
+				"wait_seconds"
             ],
             "properties": {
                 "source": {
@@ -99,10 +100,18 @@
                     },
                     "additionalProperties": false
 				},
+				"wait_seconds": {
+						"type": "integer",
+						"title": "Seconds to wait between job completion checks (default 1 hour)",
+						"description": "After a unit of work has been created on the HPC, Globus will check in the Flowcron AnalysedFiles directory periodically. Once the job completes (signalled by the removal of the Sentinels subdirectory), a transfer will start of the processed data.",
+						"minimum": 300,
+						"maximum": 86400,
+						"default": 3600
+				},
                 "delete": {
                     "type": "boolean",
                     "title": "Delete job directory after transferring the results?",
-                    "description": "Whether or not to delete the unit of work on the HPC collection once the job processing is completed.",
+                    "description": "Whether or not to delete the unit of work on the HPC collection once the job is completed and the processed data has been archived.",
                     "default": true
                 }
             },

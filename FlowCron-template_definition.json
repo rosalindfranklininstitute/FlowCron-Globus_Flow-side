@@ -583,7 +583,7 @@
         },
         "Wait": {
           "Type": "Wait",
-          "Seconds": 60,
+          "SecondsPath": "$.input.wait_seconds",
           "Next": "CheckInAnalysedFiles"
         },
         "CheckInAnalysedFiles": {
