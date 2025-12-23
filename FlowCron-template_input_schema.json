@@ -9,7 +9,8 @@
                 "source",
                 "dest",
 				"script",
-				"wait_seconds"
+				"wait_seconds",
+				"echo"
             ],
             "properties": {
                 "source": {
@@ -37,7 +38,7 @@
 				"dest": {
                     "type": "object",
                     "title": "HPC collection and Flowcron path",
-                    "description": "Select collection and path to Flowcron directory containing the UploadedFiles subdirectory. A unit of work will be created inside UploadedFiles for the STA pipeline job.",
+                    "description": "Select collection and path to Flowcron directory containing the UploadedFiles subdirectory. A unit of work will be created inside UploadedFiles for the STA pipeline job. Please ensure path ends with a /",
                     "format": "globus-collection",
                     "required": [
                         "id",
@@ -81,7 +82,7 @@
 				"echo": {
                     "type": "object",
                     "title": "Echo collection and path for analysed data",
-                    "description": "Select collection and path the unit of work should be transferred to after the analysis has completed. Note directories called 'data' or 'frames' will be excluded from the transfer.",
+                    "description": "Select collection and path the unit of work should be transferred to after the analysis has completed. Note directories called 'data' or 'frames' will be excluded from the transfer. Please ensure path ends with a /",
                     "format": "globus-collection",
                     "required": [
                         "id",

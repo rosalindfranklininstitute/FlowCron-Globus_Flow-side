@@ -396,7 +396,8 @@
             "Parameters": {
                 "current_path.=": "input.source.path",
                 "result_name.=": "''",
-                "combined.=": "''"
+                "combined.=": "''",
+                "combined_encoded.=": "''"
             },
             "ResultPath": "$.path_parts"
         },
@@ -407,7 +408,8 @@
             "Parameters": {
                 "parent.=": "pathsplit(path_parts.current_path)[0]",
                 "child.=": "pathsplit(path_parts.current_path)[1]",
-                "combined.=": "path_parts.get('combined', '')"
+                "combined.=": "path_parts.get('combined', '')",
+                "combined_encoded.=": "path_parts.get('combined_encoded', '')"
             },
             "ResultPath": "$.path_parts"
         },
@@ -439,7 +441,8 @@
             "Next": "ExtractPathComponent",
             "Parameters": {
                 "current_path.=": "path_parts.parent",
-                "combined.=": "path_parts.get('combined', '')"
+                "combined.=": "path_parts.get('combined', '')",
+                "combined_encoded.=": "path_parts.get('combined_encoded', '')"
             },
             "ResultPath": "$.path_parts"
         },
@@ -448,6 +451,7 @@
             "Next": "UpdatePathForNextIteration",
             "Parameters": {
                 "combined.=": "path_parts.child + '-' + path_parts.combined if path_parts.combined else path_parts.child",
+                "combined_encoded.=": "path_parts.child + '_-_' + path_parts.combined if path_parts.combined else path_parts.child",
                 "parent.=": "path_parts.parent",
                 "child.=": "path_parts.child"
             },
@@ -459,7 +463,8 @@
             "Next": "ExtractPathComponent",
             "Parameters": {
                 "current_path.=": "path_parts.parent",
-                "combined.=": "path_parts.combined"
+                "combined.=": "path_parts.combined",
+                "combined_encoded.=": "path_parts.combined_encoded"
             },
             "ResultPath": "$.path_parts"
         },
@@ -468,7 +473,8 @@
             "Type": "ExpressionEval",
             "Next": "EvaluateDirLocations",
             "Parameters": {
-                "combined.=": "path_parts.child + '-' + path_parts.combined if path_parts.combined else path_parts.child"
+                "combined.=": "path_parts.child + '-' + path_parts.combined if path_parts.combined else path_parts.child",
+                "combined_encoded.=": "path_parts.child + '_-_' + path_parts.combined_encoded if path_parts.combined_encoded else path_parts.child"
             },
             "ResultPath": "$.path_parts"
         },
@@ -481,6 +487,9 @@
                 "data.=": "input.dest.path + 'UploadedFiles/' + path_parts.combined + '/data/'",
                 "scripts.=": "input.dest.path + 'UploadedFiles/' +  path_parts.combined + '/scripts/'",
                 "sentinels.=": "input.dest.path + 'UploadedFiles/' +  path_parts.combined + '/sentinels'",
+                "tmp.=": "input.dest.path + 'UploadedFiles/' +  path_parts.combined + '/tmp'",
+                "tmp_source.=": "input.dest.path + 'UploadedFiles/' +  path_parts.combined + '/tmp/' + input.source.id",
+                "tmp_source_full.=": "input.dest.path + 'UploadedFiles/' +  path_parts.combined + '/tmp/' + input.source.id + '/' + path_parts.combined_encoded",
 				"analysed.=": "input.dest.path + 'AnalysedFiles/' + path_parts.combined",
 				"analysed_sentinels.=": "input.dest.path + 'AnalysedFiles/' + path_parts.combined + '/sentinels'",
 				"failed.=": "input.dest.path + 'FailedJobs/' + path_parts.combined",
@@ -500,12 +509,45 @@
         },
         "MakeJobDir": {
             "Comment": "Make top-level directory for new job",
-            "Next": "MakeDataDir",
+            "Next": "MakeTmpDir",
             "Type": "Action",
             "ActionUrl": "https://transfer.actions.globus.org/mkdir",
             "Parameters": {
                 "endpoint_id.$": "$.input.dest.id",
                 "path.$": "$.dir_locations.upload"
+            },
+            "ResultPath": "$.mkdir_result"
+        },
+        "MakeTmpDir": {
+            "Comment": "Make tmp directory for job",
+            "Next": "MakeTmpSourceDir",
+            "Type": "Action",
+            "ActionUrl": "https://transfer.actions.globus.org/mkdir",
+            "Parameters": {
+                "endpoint_id.$": "$.input.dest.id",
+                "path.$": "$.dir_locations.tmp"
+            },
+            "ResultPath": "$.mkdir_result"
+        },
+        "MakeTmpSourceDir": {
+            "Comment": "Make tmp directory encoding source id",
+            "Next": "MakeTmpSourcePathDir",
+            "Type": "Action",
+            "ActionUrl": "https://transfer.actions.globus.org/mkdir",
+            "Parameters": {
+                "endpoint_id.$": "$.input.dest.id",
+                "path.$": "$.dir_locations.tmp_source"
+            },
+            "ResultPath": "$.mkdir_result"
+        },
+        "MakeTmpSourcePathDir": {
+            "Comment": "Make tmp directory encoding source path",
+            "Next": "MakeDataDir",
+            "Type": "Action",
+            "ActionUrl": "https://transfer.actions.globus.org/mkdir",
+            "Parameters": {
+                "endpoint_id.$": "$.input.dest.id",
+                "path.$": "$.dir_locations.tmp_source_full"
             },
             "ResultPath": "$.mkdir_result"
         },
@@ -718,6 +760,12 @@
 						    "method": "exclude",
 						    "type": "dir",
 						    "name": "frames"
+						},
+						{
+						    "DATA_TYPE": "filter_rule",
+						    "method": "exclude",
+						    "type": "dir",
+						    "name": "tmp"
 						}
 				 ],
                 "DATA": [
