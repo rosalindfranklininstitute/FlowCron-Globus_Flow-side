@@ -578,7 +578,7 @@
             "Next": "TransferData",
             "Type": "Action",
             "ActionUrl": "https://transfer.actions.globus.org/transfer",
-            "WaitTime": 300,
+            "WaitTime": 172800,
             "Parameters": {
 				"notify_on_succeeded": false,
                 "DATA": [
